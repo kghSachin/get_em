@@ -95,7 +95,7 @@ class _BluetoothScanPageState extends State<BluetoothScanPage> {
 
   Future<void> connectToDeviceWithCheck(BluetoothDevice device) async {
     try {
-      print('Checking state of ${device.name}');
+      print('Checking state of ${device}');
 
       // Check if device is already connected
       if (await device.isConnected) {
@@ -111,6 +111,7 @@ class _BluetoothScanPageState extends State<BluetoothScanPage> {
       print('Successfully connected to ${device.name}');
     } catch (e) {
       print('Error connecting to device: $e');
+      rethrow;
     }
   }
 
@@ -155,12 +156,13 @@ class _BluetoothScanPageState extends State<BluetoothScanPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('${result.rssi} dBm'),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
                           if (isConnected) {
                             disconnectFromDevice(result.device);
                           } else {
+                            print('Connecting to ${result.device.remoteId}');
                             connectToDeviceWithCheck(result.device);
                           }
                         },
